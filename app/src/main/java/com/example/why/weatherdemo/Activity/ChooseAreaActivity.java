@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.why.weatherdemo.Model.City;
 import com.example.why.weatherdemo.Model.CoolWeatherDB;
@@ -58,7 +59,7 @@ public class ChooseAreaActivity extends AppCompatActivity {
         listView=(ListView)findViewById(R.id.list_view);
         textView=(TextView)findViewById(R.id.textView);
 
-        adapter=new ArrayAdapter<String>(this,android.R.layout.activity_list_item,dataList);
+        adapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,dataList);
         listView.setAdapter(adapter);
         coolWeatherDB = CoolWeatherDB.getinstance(this);
 
@@ -193,7 +194,7 @@ public class ChooseAreaActivity extends AppCompatActivity {
                             runOnUiThread(new Runnable() {      @Override
                             public void run() {
                                 closeProgressDialog();
-                            //  Toast.makeText(ChooseAreaActivity.this,           "加载失败", Toast.LENGTH_SHORT).show();
+                             Toast.makeText(ChooseAreaActivity.this,"加载失败", Toast.LENGTH_SHORT).show();
                                 }     });    }
 
                     });
@@ -212,7 +213,26 @@ public class ChooseAreaActivity extends AppCompatActivity {
 
     private void closeProgressDialog()
     {
+      if(progressDialog!=null)
+      {
+          progressDialog.dismiss();
+      }
 
+    }
+
+
+    public void onBackPressed()
+    {
+        if(currentLevel==LEVEL_COUNTY)
+            queryCities();
+        else if(currentLevel==LEVEL_CITY)
+        {
+            queryProvinces();
+        }
+       else
+        {
+            finish();
+        }
 
     }
 
