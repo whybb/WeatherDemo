@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -31,6 +32,7 @@ import static android.R.attr.country;
 
 public class ChooseAreaActivity extends AppCompatActivity {
 
+    private static final String ACTIVITY_TAG="LogDemo";
     private boolean isFromWeatherActivity;
     private  static final int LEVEL_PROVINCE = 0;
     public static final int LEVEL_CITY = 1;
@@ -57,10 +59,16 @@ public class ChooseAreaActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        isFromWeatherActivity = getIntent().getBooleanExtra("from_weather_ activity", false);
+        //Log.v(this.ACTIVITY_TAG,"BEFOR-isFromWeatherActivity");
+
+        isFromWeatherActivity = getIntent().getBooleanExtra("from_weather_ activity",false);
+
+       // Log.v(this.ACTIVITY_TAG,"sss:"+isFromWeatherActivity);
+
         SharedPreferences prefs = PreferenceManager. getDefaultSharedPreferences(this);
-        if (prefs.getBoolean("city_selected", false&& !isFromWeatherActivity))
-        {    Intent intent = new Intent(this, WeatherActivity.class);
+        if (prefs.getBoolean("city_selected", false) && isFromWeatherActivity)//important choice
+        {
+            Intent intent = new Intent(this, WeatherActivity.class);
             startActivity(intent);
             finish();
             return;
