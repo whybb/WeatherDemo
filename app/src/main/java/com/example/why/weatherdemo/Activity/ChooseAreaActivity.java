@@ -1,6 +1,9 @@
 package com.example.why.weatherdemo.Activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -28,6 +31,7 @@ import static android.R.attr.country;
 
 public class ChooseAreaActivity extends AppCompatActivity {
 
+    private boolean isFromWeatherActivity;
     private  static final int LEVEL_PROVINCE = 0;
     public static final int LEVEL_CITY = 1;
     public static final int LEVEL_COUNTY = 2;
@@ -53,6 +57,15 @@ public class ChooseAreaActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        isFromWeatherActivity = getIntent().getBooleanExtra("from_weather_ activity", false);
+        SharedPreferences prefs = PreferenceManager. getDefaultSharedPreferences(this);
+        if (prefs.getBoolean("city_selected", false&& !isFromWeatherActivity))
+        {    Intent intent = new Intent(this, WeatherActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_choose_area);
 
@@ -78,7 +91,15 @@ public class ChooseAreaActivity extends AppCompatActivity {
                 {
                     selectedCity = cityList.get(position);
                     queryCounties();
+                }else if (currentLevel == LEVEL_COUNTY)
+                {
+                    String countyCode = countyList.get(position).getCountyCode();
+                    Intent intent = new Intent(ChooseAreaActivity.this, WeatherActivity.class);
+                    intent.putExtra("county_code", countyCode);
+                    startActivity(intent);
+                    finish();
                 }
+
             }
         });
 
@@ -231,6 +252,11 @@ public class ChooseAreaActivity extends AppCompatActivity {
         }
        else
         {
+            if (isFromWeatherActivity)
+            {
+                Intent intent = new Intent(this, WeatherActivity.class);
+                startActivity(intent);
+            }
             finish();
         }
 
